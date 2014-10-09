@@ -1,0 +1,43 @@
+<%include header%>
+	<div class="container">
+		<textarea id="text-input" rows="6" cols="60"></textarea>
+	<div id="preview"></div>
+	<input type="button" class="test" value="test">
+	</div>
+<script type="text/javascript" src="/javascripts/lib/markdown.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	// $("#text-input").keydown(function(){
+	// 	var _this = $(this);
+	// 	$("#preview").html(markdown.toHTML(_this.val()));
+	// });
+	$(".test").click(function(){
+		var obj = $("#text-input");
+		var str = "hello world";
+		if(document.selection) {
+			obj.focus();
+			var sel = document.selection.createRange();
+			sel.text = str;
+		} else {
+			if(typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
+				var startPos = obj.selectionStart;
+				var endPos = obj.selectionEnd;
+				var tmpStr = obj.value;
+				obj.value = tmpStr.substring(0,startPos)+str+tmpStr.substring(endPos,tmpStr,tmpStr.length);
+			} else {
+				obj.value += str;
+			}
+		}
+	});
+
+	// function Editor(input, preview) {
+	// 	this.update = function() {
+	// 		preview.html(markdown.toHTML(input.val()));
+	// 	};
+	// 	input.editor = this;
+	// 	this.update();
+	// }
+	// new Editor($("#text-input"),$("#preview"));
+});
+</script>
+<%include footer%>
