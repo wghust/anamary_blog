@@ -40,4 +40,37 @@ $(document).ready(function() {
 	// new Editor($("#text-input"),$("#preview"));
 });
 </script>
+<canvas id="c" width="100%"></canvas>
+<script type="text/javascript">
+	var c  =document.getElementById('c');
+	var ctx = c.getContext("2d");
+	c.height = window.innerHeight;
+	c.width = window.innerWidth;
+	var chinese = "123456123456123456123456123456123456123456";
+	chinese = chinese.split("");
+
+	var fontSize = 10;
+	var columns = c.width/fontSize;
+
+	var drops = [];
+	for(var x = 0;x < columns;x++) {
+		drops[x] = 0;
+	}
+
+	function draw() {
+		ctx.fillStyle = "rgba(0,0,0,0.5)";
+		ctx.fillRect(0,0,c.width,c.height);
+		ctx.fillStyle = "#0f0";
+		ctx.font = fontSize + "px arial";
+		for(var i = 0;i < drops.length;i++) {
+			var text = chinese[Math.floor(Math.random()*chinese.length)];
+			ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+			if(drops[i]*fontSize > c.height && Math.random() > 0.975) {
+				drops[i] = 0;
+			}
+			drops[i]++;
+		}
+	}
+	setInterval(draw,1);
+</script>
 <%include footer%>

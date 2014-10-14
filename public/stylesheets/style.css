@@ -582,8 +582,67 @@ li {
 	outline: 0;
 	font-size: 14px;
 }
-
-
+.write_tags {
+	width: 800px;
+	margin-top: 20px;
+}
+.write_tags input {
+	border: 1px solid transparent;
+	padding: 10px 20px;
+	width: 360px;
+	outline: 0;
+	font-size: 14px;
+	/*float: left;*/
+}
+.write_tags .show_tags {
+	/*float: left;*/
+	width: 800px;
+	margin-top: 10px;
+	/*padding-left: 20px;*/
+	/*padding-top: 15px;*/
+}
+.write_tags .show_tags a {
+	border: 1px solid #3592DD;
+	padding: 3px 10px;
+	border-radius: 100px;
+	cursor: pointer;
+	color: black;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	/*display: block;*/
+	float: left;
+}
+.write_tags .show_tags a:hover {
+	background-color: #3592DD;
+	color: white;
+}
+.write_tool {
+	width: 800px;
+	/*height: 40px;*/
+	margin-top: 20px;
+	/*background-color: white;*/
+}
+.write_tool ul {
+	/*height: 38px;*/
+	/*line-height: 40px;*/
+}
+.write_tool ul li {
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 14px;
+	height: 40px;
+	line-height: 40px;
+	/*border: 1px solid #3592DD;*/
+	border-right: 1px solid #F2F2F2;
+	border-bottom: 1px solid #F2F2F2;
+	background-color: #ffffff;
+	float: left;
+	cursor: pointer;
+}
+.write_tool ul li:hover {
+	background-color: #3592DD;
+	color: white;
+}
 /*code*/
 .page {
 	width: 760px;
