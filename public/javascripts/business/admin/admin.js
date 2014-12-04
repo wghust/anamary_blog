@@ -30,7 +30,7 @@ $(document).ready(function() {
                         if (data.state) {
                             $(".msg").show().html(data.msg);
                             // window.location.href = '/';
-                            redirctUrl("/", 2000);
+                            redirctUrl("/index", 2000);
                         } else {
                             $(".msg").show().html(data.msg);
                         }
@@ -49,8 +49,9 @@ $(document).ready(function() {
             var password = $(".admin_password").val();
             var str = "";
             var isOK = true;
-            if (email.length < 1 || null == email) {
-                str += "邮箱太短或者为空<br>";
+            var emailreg = "^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
+            if (email.length < 1 || null == email || !emailreg.test(email)) {
+                str += "邮箱太短或者为空或者错误<br>";
                 isOK = false;
             }
             if (username.length < 1 || null == username) {
@@ -91,8 +92,8 @@ $(document).ready(function() {
     };
     var redirctUrl = function(url, time) {
         setTimeout(function() {
-            $("body").load(url);
-            // window.location.href = url;
+            // $("body").load(url);
+            window.location.href = url;
         }, time);
     };
     init();

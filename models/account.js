@@ -11,6 +11,9 @@ module.exports = function(config, mongoose, nodemailer) {
         },
         username: {
             type: String
+        },
+        description: {
+            type: String
         }
     });
 
@@ -24,7 +27,15 @@ module.exports = function(config, mongoose, nodemailer) {
             email: email,
             password: shaSum.digest('hex')
         }, function(err, doc) {
-            callback(null != doc);
+            // console.log(doc);
+            // callback()
+            var user = {
+                email: doc.email,
+                username: doc.username,
+                _id: doc._id
+            };
+            callback(null != doc, user);
+
         });
     };
 
@@ -65,9 +76,29 @@ module.exports = function(config, mongoose, nodemailer) {
             }
         });
     };
+    // var update_user = function(newone, callback) {
+    //     Account.update({
+    //         email: newone.email
+    //     }, {
+    //         $set: {
+    //             username: newone.username,
+    //             description: newone.description
+    //         }
+    //     }, function(err) {
+    //         var state = 0;
+    //         if (err) {
+    //             state = 0;
+    //         } else {
+    //             state = 1;
+    //         }
+    //         callback(state);
+    //     });
+    // };
+
     return {
         login: login,
         register: register,
         Account: Account
+        // update_user: update_user
     }
 };

@@ -1,0 +1,17 @@
+<%include header%>
+<div class="body_bg">
+	<img src="/images/<%=mood_image%>">
+</div>
+<div class="container mood_container">
+	<div class="mood_content">
+		<p><%= mood.content%></p>
+		<span><%= mood.date%>&nbsp;&nbsp;&nbsp;&nbsp;<%= mood.author%></span>
+		<div class="clear"></div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".mood_bg").fadeIn(2000);
+		});
+	</script>
+</div>
+<%include footer_2%>

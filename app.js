@@ -32,6 +32,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 30
     },
     resave: true,
+    auto_reconnect: true,
     saveUninitialized: true
 }));
 app.use(function(req, res, next) {

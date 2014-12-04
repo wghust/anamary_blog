@@ -647,7 +647,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
         htmlState: null,
         indentation: 0,
 
-        inline: inlineNormal,
+                    inline: inlineNormal,
         text: handleText,
 
         escape: false,

@@ -1,0 +1,185 @@
+<% include header %>
+<div class="container">
+	<!-- 介绍 -->
+	<div class="oneblock">
+		<div class="oneblock_top">
+			<span>介绍</span>
+			<a href="#" class="onebtn edit_ifm" data-edit="0">编辑</a>
+			<div class="clear"></div>
+		</div>
+		<div class="oneblock_con">
+			<div class="wbbface">
+				<img src="/images/header.jpeg">
+			</div>
+			<div class="wbbdec">
+				<% if(blogifm!=null) {%>
+					<input type="text" value="<%=blogifm.blogname%>" class="blogname" disabled="disabled"><br><br>
+				<% } else {%>
+					<input type="text" value="" class="blogname" disabled="disabled"><br><br>
+				<% } %>
+				<span style="float:left;font-size:18px;">简介:</span>&nbsp;&nbsp;
+				<textarea class="description" disabled="disabled"><% if(blogifm!=null) {%><%=blogifm.description%><% } %></textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="oneblock_foot"></div>
+	</div>
+	<!-- 栏目 -->
+	<div class="oneblock cat_block">
+		<div class="addcatform" data-isedit='true'>
+			<div class="addcat_block">
+				<input type="text" class="onecat_name" placeholder="栏目名"><br>
+				<input type="hidden" value="" class="onecat_uid">
+				<div class="cat_down">
+					<input type="text" readonly="true" placeholder="父ID" class="onecat_parentid" data-uid="-1">
+					<ul class="list_ul" data-state="down">
+						<li data-uid="-1">一级栏目</li>
+						<% if(cats!=null) {%>
+						<% cats.forEach(function(cat,index){ %>
+							<% if(cat.parentuid == -1) {%>
+							<li data-uid="<%=cat.uid%>"><%=cat.catname%></li>
+							<% } %>
+						<% }) %>
+						<% } %>
+					</ul>
+				</div>
+				<textarea placeholder="描述" class="onecat_dec"></textarea><br>
+				<a href="#" class="onebtn one_cat_add" data-isadd='false'>添加</a>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="oneblock_top">
+			<span>栏目</span>
+		</div>
+		<div class="oneblock_con">
+			<table class="oneblock_table">
+				<thead>
+					<tr>
+						<td>栏目名</td>
+						<td>栏目ID</td>
+						<td>父ID</td>
+						<td>栏目描述</td>
+						<td>编辑</td>
+					</tr>
+				</thead>
+				<tbody>
+					<% if(cats!=null) {%>
+						<% cats.forEach(function(cat,index){ %>
+							<tr>
+								<td><span class="edit"><%=cat.catname%></span></td>
+								<td><%=cat.uid%></td>
+								<td><span><%=cat.parentuid%></span></td>
+								<td><span><%=cat.description%></span></td>
+								<td>
+									<a href="#" class="onebtn catedit" data-isadd='false' data-state="true" data-op="update">编辑</a>
+									<a href="#" class="onebtn catdelete">删除</a>
+								</td>
+							</tr>
+						<% }) %>
+					<% } else { %>
+						<tr>
+							<td style="text-align:center;" colspan="5">sorry,no cat find</td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		<div class="oneblock_foot">
+			<a href="#" class="onebtn cat_add" data-state="true" data-isadd='false' data-op="inset">添加</a>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<!-- 所有文章 -->
+	<div class="oneblock">
+		<div class="oneblock_top">
+			<span>文章</span>
+		</div>
+		<div class="oneblock_con">
+			<table class="oneblock_table article_table">
+				<thead>
+					<tr>
+						<td>标题</td>
+						<td>状态</td>
+						<td>阅读数</td>
+						<td>栏目</td>
+						<td>标签</td>
+						<td>发布时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<% if(articlelist!=null) {%>
+						<% articlelist.forEach(function(onearticle,index){ %>
+							<tr>
+								<td>
+									<a href="/page/<%=onearticle.urltitle%>" class="one_art_name"><%=onearticle.title%></a>
+								</td>
+								<td>
+									<% if(onearticle.state == 0) {%>
+									发布
+									<% } %>
+									<% if(onearticle.state == 1) {%>
+									草稿
+									<% } %>
+									<% if(onearticle.state == 2) {%>
+									隐私
+									<% } %>
+								</td>
+								<td>
+									<%=onearticle.view%>
+								</td>
+								<td>
+									<%=onearticle.cats%>
+								</td>
+								<td>
+									<%onearticle.tags.forEach(function(onetag,index){ %>
+										<a href="/tags/<%=onetag%>" class="one_art_tag"><%=onetag%></a>
+									<%	})%>
+									<div class="clear"></div>
+								</td>
+								<td>
+									<%=onearticle.date%>
+								</td>
+								<td>
+									<a href="/admin/editpage/<%=onearticle.urltitle%>" class="onebtn" data-edit="0">编辑</a>
+								</td>
+							</tr>	
+						<%	}); %>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+		<div class="oneblock_foot">
+			<div class="pagination">
+				<%nownum = 0%>
+				<ul class="pagination_ul" data-count="<%=count%>" data-nownum="1">
+			    <% if(nownum!=0) {%>
+			      <li>
+			        <a href="#">&laquo;</a>
+			      </li>
+			    <% } %>
+			    <% if(count!=1) {%>
+			      <% for(i=0;i<count;i++) {%>
+			        <li>
+			          <% if(i==nownum) {%>
+			            <a href="#" class="active"><%=i+1%></a>
+			          <% } else {%>
+			            <a href="#"><%=i+1%></a>
+			          <% } %>
+			        </li>
+			      <% } %>
+			    <% } %>
+			    <% if(nownum!=count-1&&count!=1) {%>
+			      <li>
+			        <a href="#">&raquo;</a>
+			      </li>
+			    <% } %>
+				</ul>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<link rel="stylesheet" type="text/css" href="/stylesheets/set.css">
+<script type="text/javascript" src="/javascripts/business/set/set.js"></script>
+<% include footer %>

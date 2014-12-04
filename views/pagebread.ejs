@@ -1,0 +1,26 @@
+<div class="pagination">
+	<ul class="pagination_ul">
+    <% if(nownum!=0) {%>
+      <li>
+        <a href="/index/<%=nownum-1%>">&laquo;</a>
+      </li>
+    <% } %>
+    <% if(count!=1) {%>
+      <% for(i=0;i<count;i++) {%>
+        <li>
+          <% if(i==nownum) {%>
+            <a href="/index/<%=i%>" class="active"><%=i+1%></a>
+          <% } else {%>
+            <a href="/index/<%=i%>"><%=i+1%></a>
+          <% } %>
+        </li>
+      <% } %>
+    <% } %>
+    <% if(nownum!=count-1&&count!=1) {%>
+      <li>
+        <a href="/index/<%=nownum+1 %>">&raquo;</a>
+      </li>
+    <% } %>
+	</ul>
+	<div class="clear"></div>
+</div>

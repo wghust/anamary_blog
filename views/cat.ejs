@@ -1,43 +1,46 @@
 <div class="left">
 	<div class="wbbface">
 		<img src="/images/header.jpeg">
-		<span>ANAMARY</span>
+		<!-- <span>ANAMARY</span> -->
+		<% if(blogifm!=null) {%>
+		<span><%=blogifm.blogname%></span>
+		<% } %>
 	</div>
 	<div class="catlist">
 		<ul class="catlist_ul">
 			<li>
-				<a href="#">前端</a>
+				<a href="/cat/前端">前端</a>
 				<ul class="catlist_submenu">
 					<li>
-						<a href="#">JAVASCRIPT</a>
+						<a href="/cat/javascript">JAVASCRIPT</a>
 					</li>
 					<li>
-						<a href="#">CSS</a>
+						<a href="/cat/css">CSS</a>
 					</li>
 					<li>
-						<a href="#">HTML</a>
+						<a href="/cat/html">HTML</a>
 					</li>
 				</ul>
 			</li>
 			<li>
-				<a href="#">后端</a>
+				<a href="/cat/后端">后端</a>
 				<ul class="catlist_submenu">
 					<li>
-						<a href="#">PHP</a>
+						<a href="/cat/php">PHP</a>
 					</li>
 					<li>
-						<a href="#">MYSQL</a>
+						<a href="/cat/mysql">MYSQL</a>
 					</li>
 					<li>
-						<a href="#">SERVER</a>
+						<a href="/cat/server">SERVER</a>
 					</li>
 				</ul>
 			</li>
 			<li>
-				<a href="#">万华镜</a>
+				<a href="/cat/live">万华镜</a>
 				<ul class="catlist_submenu">
 					<li>
-						<a href="#">ABOUTME</a>
+						<a href="/cat/about">ABOUTME</a>
 					</li>
 				</ul>
 			</li>

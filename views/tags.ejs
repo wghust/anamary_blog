@@ -1,25 +1,27 @@
 <%include header%>
+<div class="body_bg">
+  <img src="/images/DSC_0272.JPG">
+</div>
 <div class="container">
 	<div class="pageshow">
-		<ul class="page_tags_ul">
-			<li>
-				<a href="#">123</a>
-				<span>2014-12-16</span>
-			</li>
-			<li>
-				<a href="#">hello world</a>
-				<span>2014-12-16</span>
-			</li>
-			<li>
-				<a href="#">123</a>
-				<span>2014-12-16</span>
-			</li>
-			<li>
-				<a href="#">hello world</a>
-				<span>2014-12-16</span>
-			</li>
-		</ul>
-		<div class="clear"></div>
+		<div class="page_top">
+			<span class="page_title"><%= tag%></span>
+		</div>
+		<div class="page_content">
+			<ul class="page_tags_ul">
+				<% if(pagelist.length == 0) {%>
+					<li><span style="display:blcok;text-align:center;width:100%;font-size:16px;">sorry,no page find~~~</span></li>
+				<% } else {%>
+					<% pagelist.forEach(function(onepage,index){ %>
+						<li>
+							<a href="/page/<%=onepage.urltitle%>"><%=onepage.title%></a>
+							<span><%=onepage.date%></span>
+						</li>
+					<% }) %>
+				<% } %>
+			</ul>
+			<div class="clear"></div>
+		</div>
 	</div>
 </div>
 <%include footer%>
