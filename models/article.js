@@ -33,41 +33,64 @@ module.exports = function(config, mongoose, pinyin, moment, marked) {
     var default_num = 5;
     // 保存文档
     var article_save = function(data, callback) {
-        article.find({
-            title: data.title
-        }, function(err, results) {
-            var btitle = pinyin(data.title, {
-                style: pinyin.STYLE_NORMAL
-            });
-            for (i = 0; i < btitle.length; i++) {
-                if (i == 0) {
-                    data.urltitle = btitle[i];
-                } else {
-                    data.urltitle += "-" + btitle[i];
+        if (data.type == "write") {
+            article.find({
+                title: data.title
+            }, function(err, results) {
+                var btitle = pinyin(data.title, {
+                    style: pinyin.STYLE_NORMAL
+                });
+                for (i = 0; i < btitle.length; i++) {
+                    if (i == 0) {
+                        data.urltitle = btitle[i];
+                    } else {
+                        data.urltitle += "-" + btitle[i];
+                    }
                 }
-            }
-            if (results.length != 0) {
-                data.urltitle = data.urltitle + "-" + (results.length + 1)
-            }
-            var newdata = new article({
-                'title': data.title,
-                'urltitle': data.urltitle,
-                'cats': data.cats,
-                'content': data.content,
-                'tags': data.tags,
-                'author': data.author,
-                'state': data.state,
-                'date': data.date
+                if (results.length != 0) {
+                    data.urltitle = data.urltitle + "-" + (results.length + 1)
+                }
+                var newdata = new article({
+                    'title': data.title,
+                    'urltitle': data.urltitle,
+                    'cats': data.cats,
+                    'content': data.content,
+                    'tags': data.tags,
+                    'author': data.author,
+                    'state': data.state,
+                    'date': data.date
+                });
+                // console.log(data);
+                newdata.save(function(err) {
+                    if (err) {
+                        callback(err, 0);
+                    } else {
+                        callback(err, 1);
+                    }
+                });
             });
-            // console.log(data);
-            newdata.save(function(err) {
+        } else {
+            console.log(data.urltitle);
+            article.update({
+                urltitle: data.urltitle
+            }, {
+                $set: {
+                    title: data.title,
+                    cats: data.cats,
+                    content: data.content,
+                    tags: data.tags,
+                    author: data.author,
+                    state: data.state,
+                    date: data.date
+                }
+            }).exec(function(err) {
                 if (err) {
                     callback(err, 0);
                 } else {
                     callback(err, 1);
                 }
             });
-        });
+        }
     };
 
     // 查询某一列表的文章
@@ -277,6 +300,28 @@ module.exports = function(config, mongoose, pinyin, moment, marked) {
         });
     };
 
+    // 
+    var change_article = function(results) {
+        var back = new Array();
+        results.forEach(function(one, index) {
+            var t = [];
+            if (one.tags) {
+                t = one.tags.split(',');
+            }
+            var b = {
+                title: one.title,
+                urltitle: one.urltitle,
+                cats: one.cats,
+                date: moment(one.date).format('YYYY-MM-DD'),
+                tags: t,
+                state: one.state,
+                view: one.view
+            };
+            back.push(b);
+        });
+        return back;
+    };
+
     // 获取所有的文章
     /**
      * 0 发布
@@ -309,26 +354,49 @@ module.exports = function(config, mongoose, pinyin, moment, marked) {
             });
         }
     };
-    var change_article = function(results) {
-        var back = new Array();
-        results.forEach(function(one, index) {
-            var t = [];
-            if (one.tags) {
-                t = one.tags.split(',');
-            }
-            var b = {
-                title: one.title,
-                urltitle: one.urltitle,
-                cats: one.cats,
-                date: moment(one.date).format('YYYY-MM-DD'),
-                tags: t,
-                state: one.state,
-                view: one.view
-            };
-            back.push(b);
-        });
-        return back;
+
+    // 获取Page
+    var get_page_list = function(type, num, pageSize, callback) {
+        if (type != -1) {
+            article.find({
+                state: type
+            }).sort({
+                _id: -1
+            }).skip(pageSize * num).limit(pageSize).exec(function(err, results) {
+                if (err) {
+                    callback(0, null);
+                } else {
+                    callback(1, change_article(results));
+                }
+            });
+        } else {
+            article.find().sort({
+                _id: -1
+            }).skip(pageSize * num).limit(pageSize).exec(function(err, results) {
+                if (err) {
+                    callback(0, null);
+                } else {
+                    callback(1, change_article(results));
+                }
+            });
+        }
     };
+
+    // 获取文章总数
+    var get_page_count = function(type, callback) {
+        if (type != -1) {
+            article.find({
+                state: type
+            }).count(function(err, count) {
+                callback(err, count);
+            });
+        } else {
+            article.find().count(function(err, count) {
+                callback(err, count);
+            });
+        }
+    }
+
 
     return {
         article_save: article_save,
@@ -337,6 +405,9 @@ module.exports = function(config, mongoose, pinyin, moment, marked) {
         get_tag_pagelist: get_tag_pagelist,
         get_index_page: get_index_page,
         get_allpage_num: get_allpage_num,
-        get_all_page_list: get_all_page_list
+        get_all_page_list: get_all_page_list,
+        get_page_list: get_page_list,
+        get_page_count: get_page_count
+
     }
 };

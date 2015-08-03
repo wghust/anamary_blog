@@ -1,0 +1,50 @@
+<%include header%>
+<div class="body_bg">
+  <img src="/images/DSC_0272.JPG">
+</div>
+<div class="container">
+	<div class="record_container">
+		<ul class="record_list">
+			<% if(pagelist.length!=0) {%>
+			<% pagelist.forEach(function(onepage,index){ %>
+				<li>
+					<span class="record_time"><%=onepage.date%></span>
+					<a href="/page/<%=onepage.urltitle%>" class="record_name"><%=onepage.title%></a>
+					<div class="record_tag">
+						<% onepage.tags.forEach(function(onetag,index){ %>
+							<a href="/tags/<%=onetag%>"><%=onetag%></a>
+						<% }); %>
+					</div>
+					<div class="clear"></div>
+				</li>
+			<% }); %>
+			<% } else {%>
+				<li>
+					<span class="record_time">2015-12-16</span>
+					<a href="http://aboutme.tecclass.cn" class="record_name">这个页面没有东西了</a>
+					<div class="record_tag">
+						<a href="http://aboutme.tecclass.cn">一起玩</a>
+					</div>
+					<div class="clear"></div>
+				</li>
+			<% } %>
+		</ul>
+		<div class="record_num">
+			<ul>
+				<% for(var i=0;i<listnum;i++) {%>
+					<% if(i==thisnum) { %>
+
+						<li><a href="/record/<%=i%>" class="record_active"><%=i+1%></a></li>
+
+					<% } else { %>
+
+						<li><a href="/record/<%=i%>"><%=i+1%></a></li>
+
+					<% } %>
+				<% } %>
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<%include footer%>

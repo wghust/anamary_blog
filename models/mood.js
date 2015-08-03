@@ -16,7 +16,7 @@ module.exports = function(config, mongoose, pinyin, moment, marked) {
         }
     });
     var mood = mongoose.model('mood', moodSchema);
-    var default_mood = 5;
+    var default_mood = 3;
     // var moodType = {
     //     "开心": ['开心','']
     // };

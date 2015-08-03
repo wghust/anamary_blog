@@ -1,14 +1,2 @@
-$(document).ready(function() {
-    var time = 5;
-    var last_time_span = $(".logout_time");
-    var lastTime = function() {
-        time--;
-        if (time >= 0) {
-            last_time_span.text(time);
-            setTimeout(lastTime, 1000);
-        } else {
-            window.location.href = "/";
-        }
-    };
-    lastTime();
-});
+/*! anamary_blog 2015-07-05;author: wangbinbin;nickname:done;blog: newblog.tecclass.cn;company:kaixun*/
+$(document).ready(function(){var a=5,b=$(".logout_time"),c=function(){a--,a>=0?(b.text(a),setTimeout(c,1e3)):window.location.href="/"};c()});

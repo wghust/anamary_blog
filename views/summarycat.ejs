@@ -1,0 +1,72 @@
+<%include header%>
+<link rel="stylesheet" type="text/css" href="/stylesheets/summary.css">
+<div class="summary_top">
+	<div class="summary_con">
+		<div class="summary_topbg">
+			<p>这是一个大地，我们建造一个一个房子，为的是创造一个城市。</p>
+			<span>This is a land that we build a house for the creation of a city.</span>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="summary_selectaddTypePanel">
+		<div class="summary_selectaddType">
+			<div class="summary_linkIn">
+				<input type="text" placeholder="添加链接" class="summary_linkshow" value="http://">
+				<textarea placeholder="谈谈你对这个链接的看法" class="summary_linkdesc"></textarea>
+			</div>
+			<div class="summary_opbtnpanel">
+				<a href="" class="summary_opbtn addPages">
+					添加文章>>
+				</a>
+				<div class="summary_opbtn addLinks">
+					添加链接
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<script id="newLink" type="x-tmpl-mustache">
+		<div class="summary_link" id="one_{{_id}}" data-sumid="{{_id}}">
+			<a href="{{url}}" class="summary_linka" target="_blank"><span class="icon-newspaper">&nbsp;</span>{{title}}</a>
+			<div class="clear"></div>
+			<div class="summary_linkdesc summary_linkdeschide">{{desc}}</div>
+			<span class="summary_linktime">{{date}}</span>
+			<a class="icon-star-empty summary_want" data-wantnum="0">&nbsp;0想看</a>
+		</div>
+	</script>
+	<div class="summary_nav">
+		<%=catifm.catname%>
+		<% if(loggedIn) {%>
+			<a href="" class="summary_add" data-catid="<%=catifm._id%>" data-type="0">添加</a>
+		<% } %>
+	</div>
+	<% if(summarys!=null) {%>
+	<% summarys.forEach(function(oneSum,index){ %>
+		<div class="summary_link" id="one_<%=oneSum._id%>" data-sumid="<%=oneSum._id%>">
+			<a href="<%=oneSum.surl%>" class="summary_linka" target="_blank"><span class="icon-newspaper">&nbsp;</span><%=oneSum.sname%></a>
+			<div class="clear"></div>
+			<% if(oneSum.sdesc!="") {%>
+			<div class="summary_linkdesc"><%=oneSum.sdesc%></div>
+			<% } %>
+			<span class="summary_linktime"><%=oneSum.sdate%></span>
+			<a class="icon-star-empty summary_want" data-wantnum="<%=oneSum.swant%>">&nbsp;<%=oneSum.swant%>想看</a>
+		</div>
+	<%	})%>
+	<% } %>
+	<!-- <div class="summary_link">
+		<a href="http://www.chinaz.com/design/2015/0504/403154.shtml" class="summary_linka" target="_blank"><span class="icon-link">&nbsp;</span>10个国外顶尖Material Design web Frameworks开发框架</a>
+		<div class="clear"></div>
+		<span class="summary_linktime">2015-12-16</span>
+	</div>
+	<div class="summary_link">
+		<a href="http://www.chinaz.com/design/2015/0504/403154.shtml" class="summary_linka" target="_blank"><span class="icon-newspaper">&nbsp;</span>10个国外顶尖Material Design web Frameworks开发框架</a>
+		<div class="clear"></div>
+		<div class="summary_linkdesc">当你把好的设计原理与技术和科学的创新结合到一起，将会发生什么奇妙的事情呢？谷歌做了点什么，创造了ofMaterial概念设计。简单的说，Material Design是一种视觉设计理念，汇集了经典设计的原则和规则，科技的可能性和规范。</div>
+		<span class="summary_linktime">2015-12-16</span>
+	</div> -->
+</div>
+<script type="text/javascript" src="/javascripts/lib/mustache.js"></script>
+<script type="text/javascript" src="/javascripts/business/summary/summaryadd.js"></script>
+<%include footer%>

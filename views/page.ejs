@@ -19,28 +19,35 @@
 			<%- onepage.content%>
 		</div>
 		<div class="page_commit">
+		<div class="page_in_commit">添加评论</div>
 			<!-- 多说评论框 start -->
 			<div class="ds-thread" data-thread-key="<%=onepage.urltitle%>" data-title="<%=onepage.title%>" data-url="/page/<%=onepage.urltitle%>"></div>
-				<!-- 多说评论框 end -->
-				<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-				<script type="text/javascript">
-				var duoshuoQuery = {short_name:"anamary"};
-				(function() {
-					var ds = document.createElement('script');
-					ds.type = 'text/javascript';ds.async = true;
-					ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
-					ds.charset = 'UTF-8';
-					(document.getElementsByTagName('head')[0] 
-					 || document.getElementsByTagName('body')[0]).appendChild(ds);
-				})();
-				</script>
-				<!-- 多说公共JS代码 end -->
-			</div>
+			<!-- 多说评论框 end -->
+			<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+			<script type="text/javascript">
+			var duoshuoQuery = {short_name:"anamary"};
+			(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+				 || document.getElementsByTagName('body')[0]).appendChild(ds);
+			})();
+			</script>
+			<!-- 多说公共JS代码 end -->
+		</div>
 	</div>
 </div>
 <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css"> -->
 <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script> -->
 <script type="text/javascript">
 	// hljs.initHighlightingOnLoad();
+	$(document).ready(function() {
+		$(".page_in_commit").click(function(){
+			$(this).hide();
+			$(".ds-thread").slideDown();
+		});
+	});
 </script>
 <%include footer%>

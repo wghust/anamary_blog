@@ -1,0 +1,30 @@
+<%include header%>
+<div class="container color_container">
+	<% if(loggedIn) {%>
+	<div class="color_con">
+	<% } else { %>
+	<div class="mid_color">
+	<% } %>
+		<% for(var i=0;i<colors.length;i++) { %>
+			<div class="oneColor">
+				<div class="oneColorRotate" style="background-color:<%=colors[i].colorRbg%>">
+				</div>
+				<div class="oneColorDetail">
+					<span><%=colors[i].colorRbg%></span>
+				</div>
+			</div>
+		<% } %>
+		<div class="clear"></div>
+	</div>
+	<% if(loggedIn) {%>
+	<div class="colorpanel">
+		<input type="text" class="colorin" placeholder="输入颜色">
+		<textarea class="colordesc" placeholder="颜色描述"></textarea>
+		<a href="javascript:void(0)" class="colorsubmit">提交</a>
+		<div class="clear"></div>
+	</div>
+	<div class="clear"></div>
+	<% } %>
+</div>
+<script type="text/javascript" src="/javascripts/business/color/color.js"></script>
+<%include footer_2%>

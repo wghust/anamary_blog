@@ -27,15 +27,19 @@ module.exports = function(config, mongoose, nodemailer) {
             email: email,
             password: shaSum.digest('hex')
         }, function(err, doc) {
-            // console.log(doc);
-            // callback()
             var user = {
-                email: doc.email,
-                username: doc.username,
-                _id: doc._id
+                email: "",
+                username: "",
+                _id: ""
             };
+            if (doc != null) {
+                user = {
+                    email: doc.email,
+                    username: doc.username,
+                    _id: doc._id
+                };
+            }
             callback(null != doc, user);
-
         });
     };
 
@@ -46,7 +50,7 @@ module.exports = function(config, mongoose, nodemailer) {
         var msg = "";
         var shaSum = crypto.createHash('sha256');
         shaSum.update(password);
-        // console.log("registering" + email);
+        console.log("registering" + email);
         var user = new Account({
             email: email,
             password: shaSum.digest('hex'),

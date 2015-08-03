@@ -1,7 +1,7 @@
 <% include header %>
 
 <div class="container">
-	<div class="write_container">
+	<div class="write_container" data-type="edit" data-urltitle="<%=article.urltitle%>">
 		<div class="write_title">
 			<input type="text" class="write_title_in" placeholder="标题" value="<%=article.title%>">
 		</div>
@@ -26,7 +26,7 @@
 			<div class="clear"></div>
 		</div>
 		<div class="write_cat">
-			<div class="write_cat_select">
+			<div class="write_cat_select" data-catlist="<%=article.cats%>">
 				<ul>
 					<li class="" data-bigcat="前端">JAVASCRIPT</li>
 					<li class="" data-bigcat="前端">HTML</li>

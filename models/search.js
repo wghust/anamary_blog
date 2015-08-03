@@ -14,37 +14,41 @@ module.exports = function(mongoose, pinyin, moment, marked) {
         }).exec(function(err, articles) {
             var rightpage = new Array();
             articles.forEach(function(article, index) {
-                if (index < 15) {
-                    var isthispage = 0;
-                    if (article.title.toLowerCase().indexOf(sword.toLowerCase()) != -1 || sword.toLowerCase().indexOf(article.title.toLowerCase()) != -1) {
-                        isthispage = 1;
-                    }
-                    if (isthispage == 0) {
-                        var thistags = article.tags.split(',');
-                        thistags.forEach(function(tag, index) {
-                            if (tag.toLowerCase().indexOf(sword.toLowerCase()) != -1 || sword.toLowerCase().indexOf(tag.toLowerCase()) != -1) {
-                                isthispage = 1;
-                                return;
-                            }
-                        });
-                    }
-                    if (isthispage == 1) {
-                        var back = {
-                            title: article.title,
-                            urltitle: article.urltitle,
-                            tags: article.tags,
-                            author: article.author,
-                            date: moment(article.date).format('YYYY-MM-DD'),
-                            content: marked(article.content.substring(0, 100)),
-                        }
-                        rightpage.push(back);
-                        // console.log(article);
-                    }
-                } else {
-                    return;
+                var isthispage = 0;
+                if (article.title.toLowerCase().indexOf(sword.toLowerCase()) != -1 || sword.toLowerCase().indexOf(article.title.toLowerCase()) != -1) {
+                    isthispage = 1;
                 }
+                if (isthispage == 0) {
+                    var thistags = article.tags.split(',');
+                    thistags.forEach(function(tag, index) {
+                        if (tag.toLowerCase().indexOf(sword.toLowerCase()) != -1 || sword.toLowerCase().indexOf(tag.toLowerCase()) != -1) {
+                            isthispage = 1;
+                            return;
+                        }
+                    });
+                }
+                if (isthispage == 1) {
+                    var back = {
+                        title: article.title,
+                        urltitle: article.urltitle,
+                        tags: article.tags,
+                        author: article.author,
+                        date: moment(article.date).format('YYYY-MM-DD'),
+                        content: marked(article.content.substring(0, 100)),
+                    }
+                    rightpage.push(back);
+                }
+                // if (index < 15) {
+
+                // } else {
+                //     return;
+                // }
             });
-            callback(err, rightpage);
+            var thisPage = [];
+            for (var i = 0; i < (rightpage.length < 15 ? rightpage.length : 15); i++) {
+                thisPage.push(rightpage[i]);
+            }
+            callback(err, thisPage);
         });
     };
 

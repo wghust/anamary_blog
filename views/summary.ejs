@@ -1,0 +1,82 @@
+<%include header%>
+<link rel="stylesheet" type="text/css" href="/stylesheets/waves.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/summary.css">
+<div class="summary_top">
+	<div class="summary_con">
+		<div class="summary_topbg">
+			<p>这是一个大地，我们建造一个一个房子，为的是创造一个城市。</p>
+			<span>This is a land that we build a house for the creation of a city.</span>
+		</div>
+	</div>
+</div>
+<% if(loggedIn) { %>
+<div class="addcatpanel">
+	<div class="sumblock">
+		<div class="sumblock_top">
+			<span>添加栏目</span>
+		</div>
+		<div class="sumblock_con">
+			<select class="sumcattypein">
+				<option data-id="1">前端</option>
+				<option data-id="2">产品</option>
+				<option data-id="3">设计</option>
+			</select>
+			<input type="text" placeholder="栏目名称" class="sumcatnamein">
+			<textarea placeholder="栏目描述" class="sumcatdescin"></textarea>
+			<input type="file" class="sumcatbginfile">
+			<div class="sumcatbgin">
+				<span class="icon-file-picture"></span>
+				<img src="" class="sumcatbginimg">
+			</div>
+			<a href="" class="sumcatsave">保存</a><a href="" class="sumcatcancel">取消</a>
+		</div>
+	</div>
+</div>
+<% } %>
+<script id="newsummary" type="x-tmpl-mustache">
+	<div class="one_summary">
+		<div class="one_summary_image">
+			<img src="{{imagesrc}}">
+		</div>
+		<div class="one_summary_desc">
+			<a href="/summary/cat/{{catid}}" class="one_summary_title">{{name}}&nbsp;</a>
+		</div>
+		<span class="one_summary_num">{{num}}条</span>
+	</div>
+</script>
+<div class="container">
+	<% if(loggedIn) { %>
+	<div class="summary_catadd">
+		<a href="" class="summary_cataddbtn">添加栏目</a>
+		<div class="clear"></div>
+	</div>
+	<% } %>
+	<% summarys.forEach(function(onesummary,index){ %>
+		<div class="one_summary">
+			<div class="one_summary_image">
+				<img src="<%=onesummary.catbg%>" class="waves-image">
+			</div>
+			<div class="one_summary_desc">
+				<a href="/summary/cat/<%=onesummary._id%>" class="one_summary_title"><%=onesummary.catname%></a>
+			</div>
+			<span class="one_summary_num"><%=pagesnums[index].num%>条</span>
+		</div>
+	<%	}); %>
+	<div class="clear"></div>
+	<div class="paging">
+		<% if(index==0 || num==0) { %>
+		<a href="javascript:void(0)" class="pagebtn uppage disable">上一页</a>
+		<% } else { %>
+		<a href="/summary/index/<%=index-1%>" class="pagebtn uppage enable">上一页</a>
+		<% } %>
+		<% if(index==num || num==0) {%>
+		<a href="javascript:void(0)" class="pagebtn nextpage disable">下一页</a>
+		<% } else { %>
+		<a href="/summary/index/<%=index+1%>" class="pagebtn nextpage enable">下一页</a>
+		<% } %>
+		<div class="clear"></div>
+	</div>
+</div>
+<script type="text/javascript" src="/javascripts/lib/waves.min.js"></script>
+<script type="text/javascript" src="/javascripts/business/summary/sumindex.js"></script>
+<%include footer%>
