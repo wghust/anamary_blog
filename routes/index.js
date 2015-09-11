@@ -7,9 +7,19 @@ var nodemailer = require('nodemailer');
 var pinyin = require('pinyin');
 var fs = require('fs');
 var moment = require('moment');
+var s = require('../settings');
+var qn = require('qn');
 mongoose.connect("mongodb://localhost/blog", function onMongooseError(err) {
     if (err)
         throw err;
+});
+
+// qn
+var client = qn.create({
+    accessKey: s.qiniu.ACCESS_KEY,
+    secretKey: s.qiniu.SECRET_KEY,
+    bucket: s.qiniu.Bucket_Name,
+    domain: s.qiniu.Domain
 });
 
 // 配置文件
@@ -24,7 +34,9 @@ var models = {
     Mood: require('../models/mood.js')(config, mongoose, pinyin, moment, marked),
     Search: require('../models/search.js')(mongoose, pinyin, moment, marked),
     Blog: require('../models/blog.js')(mongoose, pinyin, moment, marked),
-    Cat: require('../models/cat.js')(mongoose, pinyin, moment, marked)
+    Cat: require('../models/cat.js')(mongoose, pinyin, moment, marked),
+    Summary: require('../models/summary.js')(mongoose, moment, marked),
+    Color: require('../models/color.js')(config, mongoose)
 };
 
 /* GET home page. */
@@ -176,16 +188,16 @@ router.post('/admin/register', function(req, res) {
             state: 0
         };
         res.end(JSON.stringify(back));
-        return;
+    } else {
+        console.log(password);
+        models.Account.register(email, password, username, function(msg, state) {
+            back = {
+                msg: msg,
+                state: state
+            };
+            res.end(JSON.stringify(back));
+        });
     }
-    models.Account.register(email, password, username, function(msg, state) {
-        back = {
-            msg: msg,
-            state: state
-        };
-        res.end(JSON.stringify(back));
-        return;
-    });
 });
 
 router.get('/admin/logout', function(req, res) {
@@ -233,12 +245,16 @@ router.post('/admin/article_save', function(req, res) {
     var _thisTags = req.param('tags');
     var _thiscats = req.param('cats');
     var _thisstate = req.param('state');
+    var _thistype = req.param('type');
+    var _thisUrltitle = req.param('urltitle');
     var data = {
         title: _thisTitle,
         content: _thisContent,
         tags: _thisTags,
         cats: _thiscats,
-        state: _thisstate
+        state: _thisstate,
+        type: _thistype,
+        urltitle: _thisUrltitle
     };
     // console.log(req.session.user);
     data.author = req.session.user.username;
@@ -454,6 +470,202 @@ router.post('/search', function(req, res) {
         res.end(JSON.stringify(results));
     });
 });
+
+// page list
+router.get('/record', function(req, res) {
+    var pageSize = 20;
+    models.Article.get_page_list(0, 0, pageSize, function(err, results) {
+        models.Article.get_page_count(0, function(err, count) {
+            var listNum = Math.ceil(count / pageSize);
+            res.render('record', {
+                title: '文章志',
+                pagelist: results,
+                listnum: listNum,
+                thisnum: 0
+            });
+        });
+    });
+});
+
+router.get('/record/:index', function(req, res) {
+    var pageSize = 20;
+    var num = req.param('index');
+    models.Article.get_page_list(0, num, pageSize, function(err, results) {
+        models.Article.get_page_count(0, function(err, count) {
+            var listNum = Math.ceil(count / pageSize);
+            res.render('record', {
+                title: '文章志',
+                pagelist: results,
+                listnum: listNum,
+                thisnum: num
+            });
+        });
+    });
+});
+
+router.get('/summary/index', function(req, res) {
+    var index = 0;
+    var pageSize = 12;
+    models.Summary.getSummaryCat(index, pageSize, function(err, results) {
+        models.Summary.getCatSum(pageSize, function(num) {
+            num = (num == 0 ? 0 : num - 1);
+            models.Summary.getSummaryNum(results, function(pagesnums) {
+                res.render('summary', {
+                    title: '技术栏目',
+                    summarys: results,
+                    index: index,
+                    num: num,
+                    pagesnums: pagesnums
+                });
+            });
+        });
+    });
+});
+
+router.get('/summary/index/:index', function(req, res) {
+    var index = parseInt(req.param('index'));
+    var pageSize = 12;
+    models.Summary.getSummaryCat(index, pageSize, function(err, results) {
+        models.Summary.getCatSum(pageSize, function(num) {
+            num = (num == 0 ? 0 : num - 1);
+            res.render('summary', {
+                title: '技术栏目',
+                summarys: results,
+                index: index,
+                num: num
+            });
+        });
+    });
+});
+
+router.get('/summary/cat/:catid', function(req, res) {
+    var _id = req.param('catid');
+    var _newid = req.param('thisid');
+    models.Summary.getOneSummaryCat(_id, function(err, result) {
+        models.Summary.getOneCatAllSummary(_id, function(allPages, state) {
+            res.render('summarycat', {
+                title: '大收集--' + result.catname,
+                catifm: result,
+                summarys: allPages
+            });
+        });
+    });
+});
+
+router.post('/summary/one/add', function(req, res) {
+    var type = parseInt(req.param('type'));
+    var catId = req.param('catid');
+    var oneLink = req.param('onelink');
+    switch (type) {
+        case 0:
+            models.Summary.addOneLink(catId, oneLink, function(newLink, state) {
+                res.json({
+                    state: state,
+                    newLink: newLink
+                });
+            });
+            break;
+        case 1:
+            break;
+        default:
+            break;
+    }
+});
+
+router.post('/summary/one/want', function(req, res) {
+    var _id = req.param('_id');
+    models.Summary.addOneWant(_id, function(state) {
+        res.json({
+            state: state
+        });
+    });
+});
+
+router.post('/summary/catimage/add', function(req, res) {
+    var imageData = req.param('imageData');
+    var imageName = req.param('imageName');
+    imageData = imageData.replace(/^data:image\/\w+;base64,/, "");
+    var dataBuffer = new Buffer(imageData, 'base64');
+    client.upload(dataBuffer, {
+        key: imageName
+    }, function(err, result) {
+        if (err) {
+            res.json({
+                state: false,
+                imgname: imageName,
+                imgurl: "",
+                imghash: ""
+            });
+        } else {
+            res.json({
+                state: true,
+                imgname: result.key,
+                imgurl: result.url,
+                imghash: result.hash
+            });
+        }
+    });
+});
+
+router.post('/summary/cat/add', function(req, res) {
+    var newcat = req.param('newcat');
+    models.Summary.addSummaryCat(newcat, function(state) {
+        if (state) {
+            res.json({
+                state: true
+            });
+        } else {
+            res.json({
+                state: false
+            });
+        }
+    });
+});
+
+
+router.get('/color/index', function(req, res) {
+    models.Color.getAllColor(function(allColors) {
+        var colors = [];
+        if (allColors != null) {
+            colors = allColors;
+        }
+        res.render('color', {
+            title: '多彩的颜色',
+            colors: colors
+        });
+    });
+});
+
+router.get('/color/get', function(req, res) {
+    models.Color.getAllColor(function(allColors) {
+        var colors = [];
+        if (allColors != null) {
+            colors = allColors;
+        }
+        res.header("Content-Type", "application/json; charset=utf-8");
+        res.json({
+            title: '多彩的颜色',
+            colors: colors
+        });
+    });
+});
+
+router.post('/color/add', function(req, res) {
+    var onecolor = req.param('onecolor');
+    models.Color.insertColor(onecolor, function(thiscolor, message) {
+        res.json({
+            color: thiscolor,
+            message: message
+        });
+    });
+});
+
+
+// router.get('/summary/cat/addcat', function(req, res) {
+//     res.render('summaryaddcat', {
+//         title: '添加栏目'
+//     });
+// });
 
 // 404
 router.get('*', function(req, res) {

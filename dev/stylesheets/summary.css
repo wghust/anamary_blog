@@ -22,6 +22,10 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+body {
+	background-color: #f1f1f1;
+	background-image: none;
+}
 .container {
 	margin-top: 30px;
 }
@@ -45,6 +49,9 @@
 }
 .icon-star-empty:before {
 	content: '\e9d7';
+}
+.icon-share:before {
+	content: '\ea7d';
 }
 
 .summary_top {
@@ -372,6 +379,18 @@
 	border: 1px solid #4A90E2;
 	top: 20px;
 	right: 20px;
+	padding: 4px 10px;
+	border-radius: 5px;
+	background-color: #4A90E2;
+	color: #fff;
+	cursor: pointer;
+}
+.summary_link .summary_share {
+	position: absolute;
+	font-size: 12px;
+	border: 1px solid #4A90E2;
+	top: 20px;
+	right: 100px;
 	padding: 4px 10px;
 	border-radius: 5px;
 	background-color: #4A90E2;
